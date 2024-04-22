@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VinylMixRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VinylMixRepository::class)]
@@ -16,9 +17,6 @@ class VinylMix
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
-
     #[ORM\Column]
     private ?int $trackCount = null;
 
@@ -26,10 +24,18 @@ class VinylMix
     private ?string $genre = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private \DateTimeImmutable $createdAt ;
+    
 
-    #[ORM\Column(length: 255)]
-    private ?string $no = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    public function __construct(){
+        $this->createdAt= new \DateTimeImmutable();
+    }
+
+    #[ORM\Column]
+    private int $votes = 0;
 
     public function getId(): ?int
     {
@@ -44,18 +50,6 @@ class VinylMix
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -96,14 +90,26 @@ class VinylMix
         return $this;
     }
 
-    public function getNo(): ?string
+    public function getDescription(): ?string
     {
-        return $this->no;
+        return $this->description;
     }
 
-    public function setNo(string $no): static
+    public function setDescription(?string $description): static
     {
-        $this->no = $no;
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getVotes(): ?int
+    {
+        return $this->votes;
+    }
+
+    public function setVotes(int $votes): static
+    {
+        $this->votes = $votes;
 
         return $this;
     }
