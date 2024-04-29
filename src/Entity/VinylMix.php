@@ -30,12 +30,13 @@ class VinylMix
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    public function __construct(){
-        $this->createdAt= new \DateTimeImmutable();
-    }
+
 
     #[ORM\Column]
     private int $votes = 0;
+    public function __construct(){
+        $this->createdAt= new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -110,7 +111,17 @@ class VinylMix
     public function setVotes(int $votes): static
     {
         $this->votes = $votes;
-
         return $this;
+    }
+    public function getVotesString(): String{
+        $prefix = ($this->votes === 0) ? '' : (($this->votes >= 0) ? '+' : '-');
+        return sprintf('%s %d', $prefix, abs($this->votes));
+    }
+    public function getImageUrl(int $width):string{
+        return sprintf(
+            'https://picsum.photos/id/%d/%d',
+            ($this->getId() + 50) % 1000, // number between 0 and 1000, based on the id
+            $width
+        );
     }
 }

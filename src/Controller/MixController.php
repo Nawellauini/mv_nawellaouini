@@ -1,4 +1,5 @@
 <?php
+namespace App\Controller;
 use App\Entity\VinylMix;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
