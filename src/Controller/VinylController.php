@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\VinylMix;
+use App\Repository\VinylMixRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use function Symfony\Component\String\u;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,12 +31,14 @@ class VinylController extends AbstractController
         ]);
     }
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(EntityManagerInterface $entityManager, string $slug = null): Response
+    public function browse(VinylMixRepository $mixRepository, string $slug = null): Response
     {
-        $mixRepository = $entityManager->getRepository(VinylMix::class);
-        //$mixes = $mixRepository->findAll();
-        $mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+        $mixes = $mixRepository->findAllOrderedByVotes();
+        //$mixes = $mixRepository->findAll();
+        //$mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
+        $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+        $mixes = $mixRepository->findAllOrderedByVotes();
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
